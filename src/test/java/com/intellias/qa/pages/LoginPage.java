@@ -1,30 +1,41 @@
 package com.intellias.qa.pages;
 
+import com.intellias.qa.utils.DriverManager;
 import com.intellias.qa.utils.TestUtils;
+import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
-import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
 
 public class LoginPage extends BasePage {
     TestUtils utils = new TestUtils();
+    private AppiumDriver driver;
 
-    @AndroidFindBy (accessibility = "test-Username")
-    @iOSXCUITFindBy (id = "test-Username")
+    @AndroidFindBy (accessibility = "Username input field")
     private WebElement usernameTxtFld;
 
-    @AndroidFindBy (accessibility = "test-Password")
-    @iOSXCUITFindBy (id = "test-Password")
+    @AndroidFindBy (accessibility = "Password input field")
     private WebElement passwordTxtFld;
 
-    @AndroidFindBy (accessibility = "test-LOGIN")
-    @iOSXCUITFindBy (id = "test-LOGIN")
+    @AndroidFindBy (accessibility = "Login button")
     private WebElement loginBtn;
 
-    @AndroidFindBy (xpath = "//android.view.ViewGroup[@content-desc=\"test-Error message\"]/android.widget.TextView")
-    @iOSXCUITFindBy (xpath = "//XCUIElementTypeOther[@name=\"test-Error message\"]/child::XCUIElementTypeStaticText")
+    @AndroidFindBy(uiAutomator = "new UiSelector().text(\"Provided credentials do not match any user in this service.\")")
     private WebElement errTxt;
 
-    public LoginPage(){
+    @AndroidFindBy(uiAutomator = "new UiSelector().text(\"Sorry, this user has been locked out.\")")
+    private WebElement lockedUserErrorText;
+
+    @AndroidFindBy(uiAutomator = "new UiSelector().text(\"Password is required\")")
+    private WebElement passworderrText;
+
+    @AndroidFindBy(uiAutomator = "new UiSelector().text(\"Username is required\")")
+    private WebElement usernameerrText;
+
+    public LoginPage() {
+        this.driver = new DriverManager().getDriver();
+        PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
     public LoginPage enterUserName(String username) throws InterruptedException {
@@ -55,4 +66,18 @@ public class LoginPage extends BasePage {
         return err;
     }
 
+    public String getLockedUserErrTxt() {
+        String err = getText(lockedUserErrorText, "error text is - ");
+        return err;
+    }
+
+    public String getPasswordErrTxt() {
+        String err = getText(passworderrText, "error text is - ");
+        return err;
+    }
+
+    public String getUsernameErrTxt() {
+        String err = getText(usernameerrText, "error text is - ");
+        return err;
+    }
 }

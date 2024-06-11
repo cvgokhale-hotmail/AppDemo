@@ -13,11 +13,11 @@ import io.cucumber.testng.CucumberOptions;
                 , "summary"
 //        , "me.jvt.cucumber.report.PrettyReports:target/Pixel3/cucumber-html-reports"
         }
-        ,features = {"src/test/resources"}
+        ,features = {"src/test/resources/features"}
         ,glue = {"com.intellias.qa.stepdefinitions"}
         ,dryRun=false
         ,monochrome=true
-        ,tags = "@test"
+        ,tags = "@Test"
 )
 public class MyPixel3aTestNGRunnerTest extends RunnerBase {
 }

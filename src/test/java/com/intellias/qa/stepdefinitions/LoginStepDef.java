@@ -4,7 +4,8 @@ import com.intellias.qa.pages.LoginPage;
 import com.intellias.qa.pages.ProductsPage;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.Assert;
+import org.testng.Assert;
+//import org.junit.Assert;
 
 public class LoginStepDef {
 
@@ -24,12 +25,29 @@ public class LoginStepDef {
     }
 
     @Then("login should fail with an error {string}")
-    public void loginShouldFailWithAnError(String err) {
-        Assert.assertEquals(new LoginPage().getErrTxt(), err);
+    public void loginShouldFailWithAnError(String expected) {
+        Assert.assertEquals(new LoginPage().getErrTxt(), expected);
+
+    }
+
+    @Then("login should fail with lockedUser error {string}")
+    public void loginShouldFailWithLockedUserError(String expected) {
+        Assert.assertEquals(new LoginPage().getLockedUserErrTxt(), expected);
+
+    }
+
+    @Then("login should fail with password error {string}")
+    public void loginShouldFailWithPasswordError( String expected) {
+        Assert.assertEquals(new LoginPage().getPasswordErrTxt(), expected);
     }
 
     @Then("I should see Products page with title {string}")
     public void iShouldSeeProductsPageWithTitle(String title) {
         Assert.assertEquals(new ProductsPage().getTitle(), title);
+    }
+
+    @Then("login should fail with username error {string}")
+    public void loginShouldFailWithUsernameError(String expected) {
+        Assert.assertEquals(new LoginPage().getUsernameErrTxt(), expected);
     }
 }

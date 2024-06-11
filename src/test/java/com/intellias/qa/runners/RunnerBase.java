@@ -1,11 +1,11 @@
 package com.intellias.qa.runners;
 import com.intellias.qa.utils.DriverManager;
-import com.intellias.qa.utils.GlobalParams;
 import com.intellias.qa.utils.ServerManager;
 import io.cucumber.testng.FeatureWrapper;
 import io.cucumber.testng.PickleWrapper;
 import io.cucumber.testng.TestNGCucumberRunner;
 import org.apache.logging.log4j.ThreadContext;
+import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 import org.testng.annotations.*;
 
 public class RunnerBase {
@@ -19,36 +19,19 @@ public class RunnerBase {
         testNGCucumberRunner.set(testNGCucumberRunner1);
     }
 
-    @Parameters({"platformName", "udid", "deviceName", "systemPort",
-            "chromeDriverPort", "wdaLocalPort", "webkitDebugProxyPort"})
+//    @Parameters({"platformName", "udid", "deviceName", "systemPort",
+//            })
     @BeforeClass(alwaysRun = true)
-    public void setUpClass(String platformName, String udid, String deviceName, @Optional("Android") String systemPort,
-                           @Optional("Android") String chromeDriverPort,
-                           @Optional("iOS") String wdaLocalPort,
-                           @Optional("iOS") String webkitDebugProxyPort) throws Exception {
+    public void setUpClass(@Optional("Android") String platformName, @Optional("emulator-5554") String udid, @Optional("Pixel_3a") String deviceName,
+                           @Optional("4723") String systemPort, @Optional("Android") String chromeDriverPort
+                           ) throws Exception {
 
         ThreadContext.put("ROUTINGKEY", platformName + "_" + deviceName);
-
-        GlobalParams params = new GlobalParams();
-        params.setPlatformName(platformName);
-        params.setUDID(udid);
-        params.setDeviceName(deviceName);
-
-        switch(platformName){
-            case "Android":
-                params.setSystemPort(systemPort);
-                params.setChromeDriverPort(chromeDriverPort);
-                break;
-            case "iOS":
-                params.setWdaLocalPort(wdaLocalPort);
-                params.setWebkitDebugProxyPort(webkitDebugProxyPort);
-                break;
-        }
-
-        new ServerManager().startServer();
-        new DriverManager().initializeDriver();
-
+        //new ServerManager().startServer();
+        //new DriverManager().initializeDriver();
+        System.out.println("Line 31 executed");
         setRunner(new TestNGCucumberRunner(this.getClass()));
+        System.out.println("Line 33 executed");
     }
 
     @Test(groups = "cucumber", description = "Runs Cucumber Scenarios", dataProvider = "scenarios")
@@ -62,16 +45,20 @@ public class RunnerBase {
     }
 
     @AfterClass(alwaysRun = true)
-    public void tearDownClass() {
+    public void tearDownClass() throws InterruptedException {
         DriverManager driverManager = new DriverManager();
+        System.out.println("Line 49 executed");
         if(driverManager.getDriver() != null){
             driverManager.getDriver().quit();
             driverManager.setDriver(null);
         }
-        ServerManager serverManager = new ServerManager();
-        if(serverManager.getServer() != null){
-            serverManager.getServer().stop();
-        }
+
+
+
+//        ServerManager serverManager = new ServerManager();
+//        if(serverManager.getServer() != null){
+//            serverManager.getServer().stop();
+//        }
         if(testNGCucumberRunner != null){
             getRunner().finish();
         }

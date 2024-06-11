@@ -25,7 +25,7 @@ public class ServerManager {
             throw new AppiumServerHasNotBeenStartedLocallyException("Appium server not started. ABORT!!!");
         }
         server.clearOutPutStreams();
-        this.server.set(server);
+//        this.server.set(server);
         utils.log().info("Appium server started");
     }
 
@@ -34,7 +34,6 @@ public class ServerManager {
     }
 
     public AppiumDriverLocalService MacGetAppiumService() {
-        GlobalParams params = new GlobalParams();
         HashMap<String, String> environment = new HashMap<String, String>();
         environment.put("PATH", "/usr/local/git/bin:/usr/local/bin" + System.getenv("PATH"));
         environment.put("ANDROID_HOME", "/Users/chaitanyagokhale/Library/Android/sdk");
@@ -45,7 +44,7 @@ public class ServerManager {
                 .usingAnyFreePort()
                 .withArgument(GeneralServerFlag.SESSION_OVERRIDE)
                 .withEnvironment(environment)
-                .withLogFile(new File(params.getPlatformName() + "_"
-                        + params.getDeviceName() + File.separator + "Server.log")));
+                .withLogFile(new File("Android"+ "_"
+                        + "Pixel_3a" + File.separator + "Server.log")));
     }
 }

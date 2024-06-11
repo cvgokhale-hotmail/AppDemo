@@ -1,7 +1,8 @@
+
+
 package com.intellias.qa.pages;
 
 import com.intellias.qa.utils.DriverManager;
-import com.intellias.qa.utils.GlobalParams;
 import com.intellias.qa.utils.TestUtils;
 import io.appium.java_client.*;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
@@ -23,12 +24,13 @@ import static io.appium.java_client.touch.offset.PointOption.point;
 import static java.time.Duration.ofMillis;
 
 public class BasePage {
+
     private AppiumDriver driver;
     TestUtils utils = new TestUtils();
 
-    public BasePage(){
+    public BasePage() {
         this.driver = new DriverManager().getDriver();
-        PageFactory.initElements(new AppiumFieldDecorator(this.driver), this);
+//        PageFactory.initElements(new AppiumFieldDecorator(this.driver), this);
     }
 
     public void waitForVisibility(WebElement e) {
@@ -85,65 +87,46 @@ public class BasePage {
     }
 
     public String getText(WebElement e, String msg) {
-        String txt;
-        switch(new GlobalParams().getPlatformName()){
-            case "Android":
-                txt = getAttribute(e, "text");
-                break;
-            case "iOS":
-                txt = getAttribute(e, "label");
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + new GlobalParams().getPlatformName());
-        }
+        String txt = getAttribute(e, "text");
         utils.log().info(msg + txt);
         return txt;
     }
 
     public String getText(By e, String msg) {
-        String txt;
-        switch(new GlobalParams().getPlatformName()){
-            case "Android":
-                txt = getAttribute(e, "text");
-                break;
-            case "iOS":
-                txt = getAttribute(e, "label");
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + new GlobalParams().getPlatformName());
-        }
+        String txt = getAttribute(e, "text");
         utils.log().info(msg + txt);
         return txt;
     }
 
     public void closeApp() {
-        switch(new GlobalParams().getPlatformName()){
-            case "Android":
                 ((InteractsWithApps) driver).terminateApp(driver.getCapabilities().
                         getCapability("appPackage").toString());
-                break;
-            case "iOS":
-                ((InteractsWithApps) driver).terminateApp(driver.getCapabilities().
-                        getCapability("bundleId").toString());
         }
-    }
+
 
     public void launchApp() {
-        switch(new GlobalParams().getPlatformName()){
-            case "Android":
                 ((InteractsWithApps) driver).activateApp(driver.getCapabilities().
                         getCapability("appPackage").toString());
-                break;
-            case "iOS":
-                ((InteractsWithApps) driver).activateApp(driver.getCapabilities().
-                        getCapability("bundleId").toString());
         }
-    }
+
 
     public WebElement andScrollToElementUsingUiScrollable(String childLocAttr, String childLocValue) {
         return driver.findElement(AppiumBy.androidUIAutomator(
                 "new UiScrollable(new UiSelector()" + ".scrollable(true)).scrollIntoView("
                         + "new UiSelector()."+ childLocAttr +"(\"" + childLocValue + "\"));"));
+    }
+
+    public WebElement iOSScrollToElementUsingMobileScroll(WebElement e) {
+        RemoteWebElement element = ((RemoteWebElement) e);
+        String elementID = element.getId();
+        HashMap<String, String> scrollObject = new HashMap<String, String>();
+        scrollObject.put("element", elementID);
+//	  scrollObject.put("direction", "down");
+//	  scrollObject.put("predicateString", "label == 'ADD TO CART'");
+//	  scrollObject.put("name", "test-ADD TO CART");
+        scrollObject.put("toVisible", "sdfnjksdnfkld");
+        driver.executeScript("mobile:scroll", scrollObject);
+        return e;
     }
 
 
